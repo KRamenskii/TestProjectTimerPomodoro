@@ -22,7 +22,7 @@ class ViewController: UIViewController {
         progressBar.lineWidth = ConstantsForAnimation.zona
         progressBar.strokeColor = UIColor.white.cgColor
         progressBar.fillColor = UIColor.clear.cgColor
-        progressBar.strokeEnd = 0
+        progressBar.strokeEnd = Numbers.zeroCGFloat
         
         return progressBar
     }()
@@ -144,20 +144,20 @@ class ViewController: UIViewController {
 
     @objc private func startTimer() {
         
-            timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(countdown), userInfo: nil, repeats: true)
+        timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(countdown), userInfo: nil, repeats: true)
     }
     
     @objc private func countdown() -> Int {
         
-        let currentTime = tempTime - 1
-        let seconds = currentTime % 60
-        let minutes = Int(currentTime / 60)
+        let currentTime = tempTime - Numbers.one
+        let seconds = currentTime % Numbers.sixty
+        let minutes = Int(currentTime / Numbers.sixty)
         
-        label.text = "\(minutes):\(seconds < 10 ? "0" : "")\(seconds)"
-        tempTime -= 1
+        label.text = "\(minutes):\(seconds < Numbers.ten ? "0" : "")\(seconds)"
+        tempTime -= Numbers.one
         
         if trackProgressBar.strokeColor == ColorTimer.workTimeProgressBar.cgColor {
-            if tempTime == 0 {
+            if tempTime == Numbers.zero {
                 tempTime = Time.relaxTime
                 timer.invalidate()
                 createAnimation(ConstantsForAnimation.stopAnimation)
@@ -168,7 +168,7 @@ class ViewController: UIViewController {
                 createAnimation(ConstantsForAnimation.startAnimation)
             }
         } else {
-            if tempTime == 0 {
+            if tempTime == Numbers.zero {
                 tempTime = Time.workTime
                 timer.invalidate()
                 createAnimation(ConstantsForAnimation.stopAnimation)
@@ -189,7 +189,7 @@ class ViewController: UIViewController {
         let animation = CABasicAnimation(keyPath: "strokeEnd")
         
         animation.toValue = toValue
-        animation.duration = Double(tempTime + 1)
+        animation.duration = Double(tempTime + Numbers.one)
         animation.isRemovedOnCompletion = false
         animation.fillMode = .forwards
         
@@ -200,6 +200,14 @@ class ViewController: UIViewController {
 // MARK: - Constant
 
 extension ViewController {
+    
+    enum Numbers {
+        static let one: Int = 1
+        static let zeroCGFloat: CGFloat = 0
+        static let zero: Int = 0
+        static let ten: Int = 10
+        static let sixty: Int = 60
+    }
     
     enum ConstantsForAnimation {
         static let startAnimation: Int = 1
@@ -245,19 +253,19 @@ extension ViewController {
     
     private func resetTimer(_ time: Int) {
         
-        let seconds = time % 60
-        let minutes = Int(time / 60)
+        let seconds = time % Numbers.sixty
+        let minutes = Int(time / Numbers.sixty)
         
-        label.text = "\(minutes):\(seconds < 10 ? "0" : "")\(seconds)"
+        label.text = "\(minutes):\(seconds < Numbers.ten ? "0" : "")\(seconds)"
     }
     
     private func startProject() {
         
         let time = Time.workTime
-        let seconds = time % 60
-        let minutes = Int(time / 60)
+        let seconds = time % Numbers.sixty
+        let minutes = Int(time / Numbers.sixty)
         
-        label.text = "\(minutes):\(seconds < 10 ? "0" : "")\(seconds)"
+        label.text = "\(minutes):\(seconds < Numbers.ten ? "0" : "")\(seconds)"
         tempTime = time
     }
 }
